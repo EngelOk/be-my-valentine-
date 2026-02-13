@@ -155,8 +155,8 @@
 
     <div id="message-area" class="message-area"></div>
     <div class="photo-container">
-    <img id="us-photo" src="us.jpeg" alt="You and me ❤️" onerror="this.src='https://via.placeholder.com/400x300?text=Add+your+photo+here';">
-</div>
+   <img id="us-photo" src="us.jpeg" alt="You and me ❤️"
+     onerror="this.onerror=null; this.src='https://picsum.photos/400/300?grayscale'; console.log('Fallback used');">
     <footer>✨ click 'no' if you dare ✨</footer>
 </div>
 
@@ -265,7 +265,7 @@
             }
         }, 10);
 
-        // start interval to move every 0.4 seconds (slightly faster = more annoying)
+        // start interval to move every 0.9 seconds (slightly faster = more annoying)
         if (movingInterval) clearInterval(movingInterval);
         movingInterval = setInterval(() => {
             if (isMoving) {
