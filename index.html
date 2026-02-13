@@ -120,10 +120,24 @@
             50% { transform: scale(1.15); }
             100% { transform: scale(1); }
         }
+        
         footer {
             margin-top: 20px;
             color: #b05b6f;
             opacity: 0.8;
+            /* photo styling – hidden until YES */
+        #us-photo {
+            max-width: 100%;
+            max-height: 350px;
+            border-radius: 30px;
+            box-shadow: 0 20px 30px -8px rgba(190, 70, 100, 0.5);
+            margin: 20px auto 10px;
+            border: 5px solid white;
+            display: none; /* hidden initially */
+            object-fit: cover;
+        }
+        .photo-container {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -137,6 +151,9 @@
     </div>
 
     <div id="message-area" class="message-area"></div>
+    <div class="photo-container">
+    <img id="us-photo" src="us.jpg" alt="You and me ❤️" onerror="this.src='https://via.placeholder.com/400x300?text=Add+your+photo+here';">
+</div>
     <footer>✨ click 'no' if you dare ✨</footer>
 </div>
 
@@ -161,6 +178,8 @@
     const noBtn = document.getElementById('no-btn');
     const playground = document.getElementById('button-playground');
     const messageArea = document.getElementById('message-area');
+        const usPhoto = document.getElementById('us-photo');   // our photo element
+
 
     // ----- state -----
     let yesSize = 20;               // initial font size (px)
@@ -280,9 +299,12 @@
         questionEl.textContent = '💘 ДА!! Я ЛЮБЛЮ ТЕБЯ! 💘';
         messageArea.innerHTML = '<span class="heart">❤️</span> С днем Валентина, любовь моя!! <span class="heart">❤️</span><br>Я знала, что ты скажешь да! 🥰';
 
-        // optional: add cute floating hearts? but keep it simple
-    }
 
+   // REVEAL OUR PHOTO!
+        usPhoto.style.display = 'block';  // or inline-block
+
+        // optional: hide the footer? leave as is.
+    }
     // ----- NO button handler (sabotage) -----
     function onNoClick() {
         // 1. change question
