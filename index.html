@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For my Valentine ❤️</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: linear-gradient(145deg, #fff0f5 0%, #ffe4e9 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 1rem;
+            margin: 0;
+        }
+        .valentine-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-radius: 48px 48px 32px 32px;
+            box-shadow: 0 25px 40px -10px rgba(231, 84, 128, 0.4),
+                        0 0 0 2px #fff8, 
+                        inset 0 -4px 0 #fccfd7;
+            padding: 2rem 2rem 3rem 2rem;
+            max-width: 750px;
+            width: 100%;
+            text-align: center;
+            transition: 0.3s;
+            border: 1px solid #ffb6c1;
+        }
+        h1 {
+            color: #c12f5a;
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            text-shadow: 3px 3px 0 #ffe2e8;
+            letter-spacing: -0.5px;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+        .button-playground {
+            position: relative;
+            background: #ffeef1;
+            border-radius: 120px 120px 40px 40px;
+            min-height: 240px;
+            margin: 20px 0 15px 0;
+            padding: 20px 10px;
+            border: 2px dashed #ff99aa;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 30px 40px;
+        }
+        /* container for absolute moving button – relative + height */
+        .button-playground {
+            position: relative;
+        }
+        .btn {
+            border: none;
+            border-radius: 60px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 0 #a04545, 0 12px 20px -8px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+            font-family: inherit;
+            border: 2px solid #fff9;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            padding: 12px 32px;  /* initial padding */
+            font-size: 20px;      /* initial size */
+            transform: scale(1);
+            z-index: 10;
+        }
+        #yes-btn {
+            background: #d6709a;
+            background: linear-gradient(145deg, #ff8aae, #f75d8e);
+            color: white;
+            box-shadow: 0 8px 0 #aa3f63, 0 12px 20px -8px #b2456a;
+        }
+        #no-btn {
+            background: #5a4a4a;
+            background: linear-gradient(145deg, #6e5a5a, #5c4747);
+            color: #ffe7e7;
+            box-shadow: 0 8px 0 #3a2e2e, 0 12px 20px -8px #3f2e2e;
+            border: 2px solid #ffc6c6;
+            /* position will be overwritten by .moving */
+        }
+        #no-btn.moving {
+            position: absolute;
+            transition: none;    /* no smooth transition – teleport! */
+            box-shadow: 0 4px 0 #3a2e2e, 0 8px 12px -4px black;
+            z-index: 50;
+        }
+        /* ensure container boundaries */
+        .button-playground {
+            position: relative;
+        }
+        .message-area {
+            font-size: 2rem;
+            color: #d43f6b;
+            min-height: 5rem;
+            margin-top: 1.5rem;
+            font-weight: 600;
+            text-shadow: 2px 2px 0 #ffe2e8;
+        }
+        .heart {
+            display: inline-block;
+            animation: pulse 1.2s infinite;
+            font-size: 2.2rem;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        footer {
+            margin-top: 20px;
+            color: #b05b6f;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+<div class="valentine-card">
+    <h1 id="question">🌹 Would you like to be my Valentine? 🌹</h1>
+
+    <div class="button-playground" id="button-playground">
+        <button class="btn" id="yes-btn">YES ❤️</button>
+        <button class="btn" id="no-btn">no 💔</button>
+    </div>
+
+    <div id="message-area" class="message-area"></div>
+    <footer>✨ click 'no' if you dare ✨</footer>
+</div>
+
+<script>
+(function() {
+    // ----- playful question variations -----
+    const sweetQuestions = [
+        "Would you be my Valentine?",
+        "Are you absolutely sure? 💫",
+        "Maybe think again? 😇",
+        "I'll be sad if you say no... 🥺",
+        "But I really really like you! 💕",
+        "How about a second chance? 🍫",
+        "Please reconsider? 🍰",
+        "I'll bring you chocolate! 🍬",
+        "You're my only Valentine! 🥰",
+        "Don't break my heart! 💔",
+        "Click YES, it's getting bigger! 👀",
+        "The no button is shrinking...",
+        "Soon it will run away! 🏃",
+        "Just say YES! 💞",
+        "I'll love you forever! 🫶",
+        "Pretty please with sugar? 🍭",
+        "Is that your final answer? 🤔",
+        "I'll give you a massage! ✨",
+        "We can watch your favourite movie! 🎬",
+        "I'll cook for you! 🍝",
+        "Pleaseee? 🥹",
+        "I'll be your Valentine forever! ♾️",
+        "You know you want to! 😘",
+        "YES is calling your name! 📞",
+        "Don't let NO win! 🏆",
+        "I'll write you a poem! 📜",
+        "I'll sing to you! 🎤",
+        "I'll dance in the rain! 💃",
+        "Okay, last try? 🥺",
+        "Pleeeeease with a cherry? 🍒",
+        "My heart goes pitapat! 💓",
+        "Be my Valentine? 👉👈",
+        "I'll give you the last cookie! 🍪",
+        "Say yes, and I'll make you laugh! 😂",
+        "We're meant to be! 💫",
+        "No button is getting tiny! 😱",
+        "It's starting to move... 🌀",
+        "Catch it if you can! 🫳",
+        "Just give in! 🥳",
+        "I baked you a heart cake! 🎂"
+    ];
+
+    // ----- DOM elements -----
+    const questionEl = document.getElementById('question');
+    const yesBtn = document.getElementById('yes-btn');
+    const noBtn = document.getElementById('no-btn');
+    const playground = document.getElementById('button-playground');
+    const messageArea = document.getElementById('message-area');
+
+    // ----- state -----
+    let yesSize = 20;               // initial font size (px)
+    let noSize = 20;
+    const MIN_NO_SIZE = 8;           // after this, stop shrinking & start moving
+    const MAX_YES_SIZE = 64;         // but yes can keep growing a bit
+    
+    let movingInterval = null;
+    let isMoving = false;
+    let questionIndex = 0;
+
+    // ----- helper: update question (cycle) -----
+    function nextQuestion() {
+        questionIndex = (questionIndex + 1) % sweetQuestions.length;
+        questionEl.textContent = sweetQuestions[questionIndex];
+    }
+
+    // ----- grow yes button -----
+    function growYes() {
+        yesSize = Math.min(yesSize * 1.25, MAX_YES_SIZE);
+        yesBtn.style.fontSize = yesSize + 'px';
+        // adjust padding proportionally so it stays balanced
+        const padY = Math.round(yesSize * 0.5);
+        const padX = Math.round(yesSize * 1.2);
+        yesBtn.style.padding = `${padY}px ${padX}px`;
+    }
+
+    // ----- shrink no button (with lower bound) -----
+    function shrinkNo() {
+        noSize = Math.max(noSize * 0.78, MIN_NO_SIZE);
+        noBtn.style.fontSize = noSize + 'px';
+        const padY = Math.max(4, Math.round(noSize * 0.5));
+        const padX = Math.max(10, Math.round(noSize * 1.2));
+        noBtn.style.padding = `${padY}px ${padX}px`;
+    }
+
+    // ----- move no button to random spot inside playground (keeping fully inside) -----
+    function moveNoButtonRandomly() {
+        if (!isMoving) return; // just in case
+
+        const playgroundRect = playground.getBoundingClientRect();
+        const btnRect = noBtn.getBoundingClientRect();
+
+        // calculate available space (avoid going outside playground borders)
+        const maxTop = playgroundRect.height - btnRect.height;
+        const maxLeft = playgroundRect.width - btnRect.width;
+
+        if (maxTop <= 0 || maxLeft <= 0) {
+            // very tiny playground? just put somewhere visible
+            noBtn.style.top = '10px';
+            noBtn.style.left = '10px';
+            return;
+        }
+
+        const randomTop = Math.floor(Math.random() * maxTop);
+        const randomLeft = Math.floor(Math.random() * maxLeft);
+
+        noBtn.style.top = randomTop + 'px';
+        noBtn.style.left = randomLeft + 'px';
+    }
+
+    // ----- start the moving madness -----
+    function startMovingNo() {
+        if (isMoving) return; // already moving
+
+        isMoving = true;
+        noBtn.classList.add('moving');
+
+        // remove any previously set inline top/left from static mode
+        // but we want initial random position
+        // ensure it's positioned inside playground
+        // we need to force a reflow so getBoundingClientRect works with absolute
+        noBtn.style.top = '0px';
+        noBtn.style.left = '0px';
+
+        // let DOM update, then set first random position
+        setTimeout(() => {
+            if (isMoving) {
+                moveNoButtonRandomly();
+            }
+        }, 10);
+
+        // start interval to move every 0.4 seconds (slightly faster = more annoying)
+        if (movingInterval) clearInterval(movingInterval);
+        movingInterval = setInterval(() => {
+            if (isMoving) {
+                moveNoButtonRandomly();
+            }
+        }, 380);
+    }
+
+    // ----- stop moving and reset appearance (used if yes is clicked) -----
+    function stopMovingAndClean() {
+        if (movingInterval) {
+            clearInterval(movingInterval);
+            movingInterval = null;
+        }
+        if (isMoving) {
+            isMoving = false;
+            noBtn.classList.remove('moving');
+            noBtn.style.top = '';
+            noBtn.style.left = '';
+            // position returns to default static/relative (default button style)
+        }
+    }
+
+    // ----- YES button handler (happy ending) -----
+    function onYesClick() {
+        // stop the chaos
+        stopMovingAndClean();
+
+        // hide both buttons
+        yesBtn.style.display = 'none';
+        noBtn.style.display = 'none';
+
+        // show loving message
+        questionEl.textContent = '💘 Yay! You made my heart explode! 💘';
+        messageArea.innerHTML = '<span class="heart">❤️</span> Happy Valentine\'s, my love! <span class="heart">❤️</span><br>I knew you\'d say yes! 🥰';
+
+        // optional: add cute floating hearts? but keep it simple
+    }
+
+    // ----- NO button handler (sabotage) -----
+    function onNoClick() {
+        // 1. change question
+        nextQuestion();
+
+        // 2. make yes bigger
+        growYes();
+
+        // 3. shrink no (but not below min)
+        shrinkNo();
+
+        // 4. if no button reached min size, start moving (if not already moving)
+        if (noSize <= MIN_NO_SIZE + 0.5) {   // floating tolerance
+            if (!isMoving) {
+                startMovingNo();
+            } else {
+                // if already moving, give it an extra nudge each click (immediate reposition)
+                moveNoButtonRandomly();
+            }
+        }
+
+        // extra mischief: when moving, we also reposition on every click
+        if (isMoving) {
+            moveNoButtonRandomly();
+        }
+
+        // if yes button grows too large, keep it inside some bounds (already limited)
+    }
+
+    // ----- attach event listeners -----
+    yesBtn.addEventListener('click', onYesClick);
+    noBtn.addEventListener('click', onNoClick);
+
+    // ----- set initial styles (just to be sure) -----
+    yesBtn.style.fontSize = yesSize + 'px';
+    yesBtn.style.padding = '12px 32px'; // consistent with initial css
+    noBtn.style.fontSize = noSize + 'px';
+    noBtn.style.padding = '12px 32px';
+
+    // tiny safety: ensure no button is not moving at start
+    stopMovingAndClean();
+
+    // optional: adjust playground height based on window? but fine.
+    // also if window resizes, moving button might go out-of-bounds – but we re-set every 380ms anyway
+
+    // for extra love, preload first alternative question if user is curious
+    // but we keep initial question unchanged until first 'no'
+})();
+</script>
+<!-- 
+    HOW TO USE:
+    1. Save this as index.html
+    2. Push to a GitHub repository
+    3. Enable GitHub Pages (Settings > Pages > deploy from main)
+    4. Email the URL to your husband 😊
+-->
+</body>
+</html>
